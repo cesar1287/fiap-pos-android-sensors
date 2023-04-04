@@ -26,6 +26,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     private lateinit var accelerometerSensor: Sensor
 
+    private lateinit var gravitySensor: Sensor
+
     private var currentX = 0.0f
     private var currentY = 0.0f
     private var currentZ = 0.0f
@@ -55,17 +57,35 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 //            tempSensor = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
 //        }
 
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) == null) {
-            Log.i("SENSOR", "ACELEROMETRO INDISPONÍVEL")
+//        if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) == null) {
+//            Log.i("SENSOR", "ACELEROMETRO INDISPONÍVEL")
+//        } else {
+//            accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+//        }
+
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) == null) {
+            Log.i("SENSOR", "SENSOR DE GRAVIDADE INDISPONÍVEL")
         } else {
-            accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+            gravitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY)
         }
 
     }
 
+//    override fun onResume() {
+//        super.onResume()
+//        sensorManager.registerListener(this, gravitySensor, SensorManager.SENSOR_DELAY_NORMAL)
+//    }
+//
+
     override fun onResume() {
         super.onResume()
-        sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        if (this::gravitySensor.isInitialized) {
+            sensorManager.registerListener(
+                this,
+                gravitySensor,
+                SensorManager.SENSOR_DELAY_NORMAL
+            )
+        }
     }
 
     override fun onPause() {
@@ -117,6 +137,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     override fun onSensorChanged(sensorEvent: SensorEvent?) {
         sensorEvent?.let {
             shakeDetection(it)
+            //flippedDetection(it)
+        }
+    }
+
+    private fun flippedDetection(it: SensorEvent) {
+        if (it.values[2] < -9.7) {
+            Log.i("SENSOR", "Media paused")
+        } else {
+            Log.i("SENSOR", "Media started")
         }
     }
 
