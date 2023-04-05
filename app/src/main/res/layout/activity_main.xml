@@ -53,29 +53,64 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvSubtitle" />
 
-    <me.itangqi.waveloadingview.WaveLoadingView
-        android:id="@+id/wlvSteps"
-        android:layout_width="220dp"
+    <TextView
+        android:id="@+id/tvSteps"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="32dp"
+        android:textAlignment="center"
+        android:textColor="#31A96F"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dividerTitle"
+        tools:text="3000 Passos" />
+
+    <TextView
+        android:id="@+id/tvHistory"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
+        android:fontFamily="sans-serif-smallcaps"
+        android:gravity="center"
+        android:text="Histórico de Passos"
+        android:textColor="#31A96F"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/ivRefresh"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dividerTitle"
-        app:wlv_progressValue="40"
-        app:wlv_round_rectangle="true"
-        app:wlv_shapeType="circle"
-        app:wlv_titleBottom="Passos"
-        app:wlv_titleBottomColor="#FFF"
-        app:wlv_titleCenter="200"
-        app:wlv_titleCenterColor="@android:color/white"
-        app:wlv_titleCenterSize="64sp"
-        app:wlv_titleCenterStrokeWidth="3dp"
-        app:wlv_titleTop="Meta: 6000"
-        app:wlv_titleTopColor="@android:color/white"
-        app:wlv_titleTopSize="12sp"
-        app:wlv_triangle_direction="north"
-        app:wlv_waveAmplitude="70"
-        app:wlv_waveColor="#30BB62" />
+        app:layout_constraintTop_toBottomOf="@id/tvSteps" />
+
+    <ImageView
+        android:id="@+id/ivRefresh"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvHistory"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvHistory"
+        app:srcCompat="@drawable/ic_refresh" />
+
+    <ListView
+        android:id="@+id/lvSteps"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:cacheColorHint="@android:color/transparent"
+        android:clickable="false"
+        android:divider="#A8B8DB"
+        android:listSelector="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvHistory">
+
+    </ListView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,11 +10,15 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
+import android.widget.ListView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.cesar1287.sensores.databinding.ActivityMainBinding
 import java.lang.Math.abs
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
 
@@ -36,6 +40,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var stepDetector: Sensor
 
     private var stepDetect = 0
+
+    private lateinit var mStepsDBHelper: StepsDBHelper
+    private lateinit var mStepCountList: ArrayList<Step>
 
     private var currentX = 0.0f
     private var currentY = 0.0f
@@ -77,11 +84,36 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 //        } else {
 //            gravitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY)
 //        }
-
         checkPermissions()
+
+        binding.ivRefresh.setOnClickListener {
+            initList()
+        }
+
+    }
+
+    private fun initList() {
+        mStepsDBHelper = StepsDBHelper(this)
+        mStepCountList = mStepsDBHelper.readStepsEntries()
+
+        val mCalendar = Calendar.getInstance()
+        val todayDate =
+            (mCalendar.get(Calendar.DAY_OF_MONTH)
+                .toString() + "/" + (mCalendar.get(Calendar.MONTH) + 1).toString()
+                    + "/" + mCalendar.get(Calendar.YEAR).toString())
+
+        if(mStepCountList.size > 0) {
+            if(todayDate == mStepCountList[0].mDate) {
+                stepDetect = mStepCountList[0].mStepCount
+                setUpTodayStep()
+            }
+        }
+
+        binding.lvSteps.adapter = StepsListAdapter(this, mStepCountList)
     }
 
     private fun initSensors() {
+        initList()
         initStepCounter()
         initStepDetect()
     }
@@ -151,17 +183,23 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
+    private fun setUpTodayStep() {
+        binding.tvSteps.text = "$stepDetect / 3000"
+    }
+
+
     override fun onSensorChanged(sensorEvent: SensorEvent?) {
         sensorEvent?.let {
             //shakeDetection(it)
             //flippedDetection(it)
             when (it.sensor) {
                 stepCounter -> {
-                    binding.tvCounted.text = it.values[0].toString()
+                    //binding.tvCounted.text = it.values[0].toString()
                 }
                 stepDetector -> {
+                    StepsDBHelper(this).createStepsEntry()
                     stepDetect += it.values[0].toInt()
-                    binding.tvDetected.text = stepDetect.toString()
+                    setUpTodayStep()
                 }
                 gravitySensor -> {
 
